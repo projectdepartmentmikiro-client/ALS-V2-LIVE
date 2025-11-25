@@ -1,0 +1,106 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Background */
+body {
+    background-color: #1E0EBE; /* Deep royal blue */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Card container */
+.login-card {
+    background-color: #3B4EFC; /* Lighter blue */
+    width: 350px;
+    padding: 40px 35px 30px 35px;
+    border-radius: 2px;
+    text-align: left;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Title */
+.title {
+    font-size: 24px;
+    color: #000;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+/* Labels */
+.label {
+    display: block;
+    color: #000;
+    font-size: 16px;
+    font-style: italic;
+    margin-bottom: 5px;
+}
+
+/* Input fields */
+input {
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 12px;
+    background-color: #A6B2E2;
+    margin-bottom: 18px;
+    font-size: 15px;
+    color: #000;
+}
+
+/* Button */
+.login-btn {
+    display: block;
+    width: 100%;
+    background-color: #A6B2E2;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 0;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login-btn:hover {
+    background-color: #8D9CE0;
+}
+
+/* Forgot password */
+.forgot {
+    display: block;
+    text-align: center;
+    margin-top: 8px;
+    color: #EAEAEA;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.forgot:hover {
+    text-decoration: underline;
+}
+
+/* Register text */
+.register-text {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 13px;
+    color: #EAEAEA;
+}
+
+.register-link {
+    color: #0EC243;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}

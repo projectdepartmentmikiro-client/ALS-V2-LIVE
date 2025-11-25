@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Smart Library</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #2e7d32;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 30px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .nav-links a {
+            display: inline-block;
+            margin: 10px 15px;
+            padding: 12px 20px;
+            background-color: #2e7d32;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .nav-links a:hover {
+            background-color: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Welcome, {{ user.username }} (Admin)</h1>
+    </div>
+
+    <div class="container">
+        <h2>Admin Dashboard</h2>
+        <p>Use the links below to manage the library system:</p>
+        <div class="nav-links">
+            <a href="{% url 'manage_students' %}">Manage Students</a>
+            <a href="{% url 'manage_books' %}">Manage Books</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </div>
+    </div>
+</body>
+</html>

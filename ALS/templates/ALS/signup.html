@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Smart Library</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+        (function() {
+            emailjs.init("BwOysP0qA2cajgpUI"); // ✅ Your Public Key
+        })();
+    </script>
+
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1E0EBE, #3B4EFC);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .auth-card {
+            background-color: #fff;
+            width: 400px;
+            padding: 50px 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.15);
+            text-align: center;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .auth-title {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1E0EBE;
+            margin-bottom: 40px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            text-align: left;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input {
+            padding: 12px 14px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border: 2px solid #ccc;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #1E0EBE;
+            background-color: #fff;
+            outline: none;
+        }
+
+        button {
+            background-color: #1E0EBE;
+            color: #fff;
+            padding: 12px 0;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #3B4EFC;
+        }
+
+        .note {
+            font-size: 13px;
+            color: #555;
+            margin-top: 15px;
+        }
+
+        .note a {
+            color: #1E0EBE;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .messages {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .alert {
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .alert.error {
+            background-color: #ffd2d2;
+            color: #900;
+        }
+
+        .alert.success {
+            background-color: #d2ffd2;
+            color: #090;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-card">
+    <h1 class="auth-title">Register an Account</h1>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'signup' %}" id="registerForm">
+        {% csrf_token %}
+        <label for="id_number">Student ID</label>
+        <input type="text" id="id_number" name="id_number" placeholder="Enter your student ID" required>
+
+        <label for="username">Full Name</label>
+        <input type="text" id="username" name="username" placeholder="Enter your full name" required>
+ 
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Create a password" required>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p class="note">
+        Already have an account? <a href="{% url 'login' %}">Login here</a>
+    </p>
+</div>
+
+<script>
+document.getElementById("registerForm").addEventListener("submit", function() {
+    const id_number = document.getElementById("id_number").value.trim();
+    const user_email = document.getElementById("email").value.trim();
+
+    const templateParams = {
+        id_number: id_number,
+        user_email: user_email,
+        to_email: user_email,
+        date: new Date().toLocaleDateString()
+    };
+
+    // Send confirmation email via EmailJS (async)
+    emailjs.send("service_07btea4", "template_5upbci5", templateParams)
+        .then(function(response) {
+            console.log("Email sent!", response.status, response.text);
+        }, function(error) {
+            console.error("FAILED to send email...", error);
+        });
+});
+</script>
+
+</body>
+</html>

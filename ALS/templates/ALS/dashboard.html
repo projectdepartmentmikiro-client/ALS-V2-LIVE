@@ -1,0 +1,373 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | Smart Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+   body { 
+    font-family: 'Poppins', sans-serif; 
+    margin: 0; 
+    background-color: #f4f4f4; /* light gray from login */ 
+    color: #333; /* dark gray text */ 
+}
+
+.navbar { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 18px 50px; 
+    background-color: #2e7d32; /* green from login */ 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3); 
+}
+
+.nav-title { 
+    font-size: 24px; 
+    font-weight: 600; 
+    color: #fff; 
+}
+
+.logout-btn { 
+    background-color: #2e7d32; 
+    border: none; 
+    padding: 8px 18px; 
+    color: #fff; 
+    font-weight: 600; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    transition: 0.3s; 
+}
+.logout-btn:hover { 
+    background-color: #1b5e20; 
+}
+
+.nav-menu { 
+    display: flex; 
+    justify-content: center; 
+    gap: 30px; 
+    background-color: #fff; /* white nav menu */ 
+    padding: 12px 0; 
+    font-weight: 500; 
+}
+
+.nav-menu a { 
+    color: #2e7d32; /* green links */ 
+    text-decoration: none; 
+    padding: 8px 12px; 
+    border-radius: 5px; 
+    transition: 0.3s; 
+    cursor: pointer; 
+}
+
+.nav-menu a.active, .nav-menu a:hover { 
+    background-color: #1b5e20; /* dark green hover */ 
+    color: #ffd700; /* yellow accent */ 
+}
+
+.dashboard { 
+    padding: 30px 60px; 
+}
+
+.stats { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 20px; 
+    justify-content: space-between; 
+    margin-bottom: 40px; 
+}
+
+.card { 
+    flex: 1 1 220px; 
+    background-color: #2e7d32; /* green card */ 
+    padding: 25px; 
+    border-radius: 15px; 
+    text-align: center; 
+    box-shadow: 0 6px 15px rgba(0,0,0,0.4); 
+    transition: 0.3s; 
+}
+
+.card:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5); 
+    background-color: #1b5e20; 
+}
+
+.card h2 { 
+    margin: 0; 
+    font-size: 32px; 
+    font-weight: 700; 
+    color: #ffd700; /* yellow heading */ 
+}
+
+.card p { 
+    margin-top: 10px; 
+    font-weight: 500; 
+    color: #fff; 
+}
+
+.table-container { 
+    overflow-x: auto; 
+    background: #fff; /* white table container */ 
+    border-radius: 10px; 
+    padding: 20px; 
+    box-shadow: 0 6px 12px rgba(0,0,0,0.4); 
+}
+
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    color: #333; /* dark gray table text */ 
+    min-width: 700px; 
+}
+
+th, td { 
+    padding: 14px; 
+    text-align: center; 
+}
+
+th { 
+    background-color: #2e7d32; /* green header */ 
+    color: #ffd700; /* yellow */ 
+}
+
+tr:nth-child(even) { 
+    background-color: #f4f4f4; 
+}
+
+tr:nth-child(odd) { 
+    background-color: #fff; 
+}
+
+tr:hover { 
+    background-color: #1b5e20; 
+    color: #ffd700; 
+    cursor: pointer; 
+}
+
+/* ================= AI Chat ================= */
+#aiButton { 
+    position: fixed; 
+    bottom: 25px; 
+    right: 25px; 
+    background: #ffd700; 
+    color: #2e7d32; 
+    border: none; 
+    padding: 15px; 
+    border-radius: 50%; 
+    font-size: 20px; 
+    cursor: pointer; 
+    z-index: 999; 
+}
+
+#aiChat { 
+    position: fixed; 
+    bottom: 80px; 
+    right: 25px; 
+    width: 300px; 
+    max-height: 400px; 
+    background: #fff; 
+    border-radius: 10px; 
+    display: flex; 
+    flex-direction: column; 
+    box-shadow: 0 6px 12px rgba(0,0,0,0.4); 
+    z-index: 999; 
+    display: none; 
+}
+
+.chat-header { 
+    background: #2e7d32; 
+    padding: 10px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    font-weight: 600; 
+    color: #ffd700; 
+    border-top-left-radius: 10px; 
+    border-top-right-radius: 10px; 
+}
+
+.chat-body { 
+    flex: 1; 
+    padding: 10px; 
+    overflow-y: auto; 
+    font-size: 14px; 
+    background: #f4f4f4; 
+    color: #333; 
+}
+
+.chat-input { 
+    display: flex; 
+    border-top: 1px solid #1b5e20; 
+}
+
+.chat-input input { 
+    flex: 1; 
+    border: none; 
+    padding: 10px; 
+    border-radius: 0; 
+    background: #fff; 
+    color: #333; 
+}
+
+.chat-input button { 
+    background: #2e7d32; 
+    border: none; 
+    padding: 10px 15px; 
+    cursor: pointer; 
+    font-weight: bold; 
+    color: #fff; 
+}
+
+.bot-msg { 
+    background: #1b5e20; 
+    color: #ffd700; 
+    padding: 5px 10px; 
+    border-radius: 8px; 
+    margin-bottom: 5px; 
+}
+
+.user-msg { 
+    background: #2e7d32; 
+    color: #fff; 
+    padding: 5px 10px; 
+    border-radius: 8px; 
+    margin-bottom: 5px; 
+    text-align: right; 
+}
+
+</style>
+</head>
+
+<body>
+<header class="navbar">
+  <h1 class="nav-title">SMART LIBRARY</h1>
+  
+</header>
+
+<nav class="nav-menu">
+  <a href="{% url 'dashboard' %}" class="active">Dashboard</a>
+  <a href="{% url 'books' %}">Borrow Books</a>
+  <a href="{% url 'account_settings' %}">Account</a>
+</nav>
+
+<main class="dashboard">
+  <div class="stats">
+    <div class="card blue"><h2 id="totalBooks">0</h2><p>Total Books</p></div>
+    <div class="card green"><h2 id="availableBooks">0</h2><p>Available</p></div>
+    <div class="card yellow"><h2 id="borrowedBooks">0</h2><p>Borrowed</p></div>
+    <div class="card orange"><h2 id="returnedBooks">0</h2><p>Returned</p></div>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="booksTable"></tbody>
+    </table>
+  </div>
+</main>
+
+<script>
+async function fetchDashboardStats() {
+  try {
+    const response = await fetch("{% url 'dashboard_stats' %}");
+    if(!response.ok) throw new Error('Network error');
+    const data = await response.json();
+
+    document.getElementById("totalBooks").textContent = data.total_books;
+    document.getElementById("availableBooks").textContent = data.available_books;
+    document.getElementById("borrowedBooks").textContent = data.borrowed_books;
+    document.getElementById("returnedBooks").textContent = data.returned_books;
+
+    const tableBody = document.getElementById("booksTable");
+    tableBody.innerHTML = "";
+    data.books.forEach((b, i) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${i+1}</td>
+        <td>${b.title}</td>
+        <td>${b.category}</td>
+        <td>${b.status}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  } catch(err) {
+    console.error("Error fetching dashboard stats:", err);
+  }
+}
+
+// Initial load
+fetchDashboardStats();
+setInterval(fetchDashboardStats, 10000);
+
+// ================= AI Chat Script =================
+const aiButton = document.getElementById('aiButton');
+const aiChat = document.getElementById('aiChat');
+const closeChat = document.getElementById('closeChat');
+const chatBody = document.getElementById('chatBody');
+const sendBtn = document.getElementById('sendBtn');
+const userInput = document.getElementById('userInput');
+
+aiButton.addEventListener('click', () => aiChat.style.display = aiChat.style.display === 'flex' ? 'none' : 'flex');
+closeChat.addEventListener('click', () => aiChat.style.display = 'none');
+
+async function sendMessage() {
+  const msg = userInput.value.trim();
+  if (!msg) return;
+  chatBody.innerHTML += `<div class="user-msg">${msg}</div>`;
+  userInput.value = '';
+  chatBody.scrollTop = chatBody.scrollHeight;
+
+  const typing = document.createElement('div');
+  typing.className = 'bot-msg';
+  typing.id = 'typingIndicator';
+  typing.textContent = 'Assistant is typing...';
+  chatBody.appendChild(typing);
+  chatBody.scrollTop = chatBody.scrollHeight;
+
+  try {
+    await new Promise(r => setTimeout(r, 600 + Math.random()*1000));
+    const res = await fetch("{% url 'ai_assistant' %}", {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({message: msg})
+    });
+    const data = await res.json();
+    const reply = data.reply || "Sorry, I didn't understand that.";
+    typing.remove();
+
+    let botMsgDiv = document.createElement('div');
+    botMsgDiv.className = 'bot-msg';
+    chatBody.appendChild(botMsgDiv);
+
+    let i = 0;
+    const speed = 30;
+    function typeChar() {
+      if(i < reply.length) {
+        botMsgDiv.textContent += reply.charAt(i);
+        i++;
+        chatBody.scrollTop = chatBody.scrollHeight;
+        setTimeout(typeChar, speed);
+      }
+    }
+    typeChar();
+  } catch(err) {
+    console.error(err);
+    typing.remove();
+    chatBody.innerHTML += `<div class="bot-msg">Error connecting to server.</div>`;
+  }
+}
+
+sendBtn.addEventListener('click', sendMessage);
+userInput.addEventListener('keypress', e => { if(e.key==='Enter'){ e.preventDefault(); sendMessage(); } });
+</script>
+</body>
+</html>

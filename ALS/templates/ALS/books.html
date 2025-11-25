@@ -1,0 +1,344 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Borrow / Return Books | Smart Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { 
+    font-family: 'Poppins', sans-serif; 
+    margin: 0; 
+    background-color: #f4f4f4; /* light gray */ 
+    color: #333; 
+}
+
+/* ===== NAVBAR ===== */
+.navbar { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 18px 50px; 
+    background-color: #2e7d32; /* green */ 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3); 
+}
+.nav-title { font-size: 24px; font-weight: 600; color: #fff; }
+.logout-btn { 
+    background-color: #2e7d32; 
+    border: none; 
+    padding: 8px 18px; 
+    color: #fff; 
+    font-weight: 600; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    transition: 0.3s; 
+}
+.logout-btn:hover { background-color: #1b5e20; }
+
+.nav-menu { 
+    display: flex; 
+    justify-content: center; 
+    gap: 30px; 
+    background-color: #fff; 
+    padding: 12px 0; 
+    font-weight: 500; 
+}
+.nav-menu a { 
+    color: #2e7d32; 
+    text-decoration: none; 
+    padding: 8px 12px; 
+    border-radius: 5px; 
+    transition: 0.3s; 
+}
+.nav-menu a.active, .nav-menu a:hover { 
+    background-color: #1b5e20; 
+    color: #ffd700; 
+}
+
+/* ===== Page Container ===== */
+.borrow-container { 
+    display:flex; 
+    flex-direction:column; 
+    padding:30px 50px; 
+    gap:20px; 
+    min-height:calc(100vh - 120px); 
+}
+
+h1 { margin:0; text-align:center; color:#2e7d32; } /* green heading */
+
+/* ===== Categories ===== */
+.categories { 
+    display:flex; 
+    gap:10px; 
+    flex-wrap:wrap; 
+    justify-content:center; 
+    margin-bottom:20px; 
+}
+.category-btn { 
+    padding:10px 20px; 
+    background:#2e7d32; 
+    border:none; 
+    border-radius:8px; 
+    cursor:pointer; 
+    font-weight:500; 
+    color:#fff; 
+    transition:0.3s; 
+}
+.category-btn.active, .category-btn:hover { 
+    background:#ffd700; 
+    color:#333; 
+}
+
+/* ===== Book Gallery ===== */
+.book-gallery { 
+    display:flex; 
+    flex-wrap:wrap; 
+    gap:15px; 
+    justify-content:center; 
+}
+.book-card { 
+    background:#2e7d32; 
+    border-radius:12px; 
+    width:180px; 
+    padding:10px; 
+    text-align:center; 
+    cursor:pointer; 
+    transition:0.3s; 
+    box-shadow:0 6px 12px rgba(0,0,0,0.4); 
+}
+.book-card:hover { 
+    transform:translateY(-5px); 
+    box-shadow:0 10px 20px rgba(0,0,0,0.5); 
+}
+.book-card.selected { border:2px solid #1b5e20; }
+.book-card.borrowed { opacity:0.5; cursor:not-allowed; border:2px solid #ff4757; }
+.book-card img { width:100%; height:220px; object-fit:cover; border-radius:8px; margin-bottom:10px; }
+
+/* ===== Form & Camera Panel ===== */
+.form-camera-panel { 
+    display:flex; 
+    gap:30px; 
+    flex-wrap:wrap; 
+    justify-content:center; 
+}
+.panel-card { 
+    background:#2e7d32; 
+    border-radius:12px; 
+    padding:20px; 
+    box-shadow:0 6px 15px rgba(0,0,0,0.5); 
+    flex:1 1 350px; 
+    max-width:400px; 
+    display:flex; 
+    flex-direction:column; 
+    gap:15px; 
+}
+.panel-card h2 { 
+    margin:0; 
+    color:#ffd700; 
+    text-align:center; 
+}
+
+#camera-container { display:flex; flex-direction:column; align-items:center; gap:10px; }
+#video { width:100%; border-radius:12px; border:2px solid #ffd700; }
+#captureBtn { background:#2e7d32; color:#fff; border:none; padding:10px 15px; border-radius:8px; cursor:pointer; font-weight:bold; transition:0.3s; }
+#captureBtn:hover { background:#1b5e20; }
+
+form label { display:flex; flex-direction:column; font-weight:500; margin-bottom:5px; }
+form input, form select { padding:10px; border-radius:8px; border:none; margin-bottom:10px; background:#fff; color:#333; }
+form button { background:#2e7d32; color:#fff; font-weight:bold; padding:12px; border:none; border-radius:8px; cursor:pointer; transition:0.3s; }
+form button:hover { background:#1b5e20; }
+
+#otp-section { display:flex; flex-direction:column; gap:10px; margin-top:15px; }
+#otp-section input { padding:10px; border-radius:8px; border:none; width:100%; background:#fff; color:#333; }
+#otp-btn { background:#ffd700; color:#333; padding:10px 15px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; transition:0.3s; }
+#otp-btn:hover { background:#e6c200; }
+
+#result { color:#2e7d32; font-weight:bold; text-align:center; margin-top:10px; }
+</style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<header class="navbar">
+  <h1 class="nav-title">SMART LIBRARY</h1>
+</header>
+
+<nav class="nav-menu">
+  <a href="{% url 'dashboard' %}">Dashboard</a>
+  <a href="{% url 'books' %}" class="active">Borrow Books</a>
+  <a href="{% url 'account_settings' %}">Account</a>
+</nav>
+
+<div class="borrow-container">
+  <h1>Borrow / Return a Book</h1>
+
+  <div class="categories">
+    <button class="category-btn active" data-cat="all">All</button>
+    <button class="category-btn" data-cat="Math">Math</button>
+    <button class="category-btn" data-cat="Programming">Programming</button>
+    <button class="category-btn" data-cat="Science">Science</button>
+    <button class="category-btn" data-cat="Technology">Technology</button>
+  </div>
+
+  <div class="book-gallery" id="bookGallery"></div>
+
+  <div class="form-camera-panel">
+    <!-- Camera Panel -->
+    <div class="panel-card">
+      <h2>Capture Photo</h2>
+      <div id="camera-container">
+        <video id="video" autoplay></video>
+        <button type="button" id="captureBtn">Capture Photo</button>
+      </div>
+      <div id="result"></div>
+    </div>
+
+    <!-- Borrow / Return Form -->
+    <div class="panel-card">
+      <h2>Borrow / Return</h2>
+      <form id="borrowForm" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" id="book_id" name="book_id">
+        <input type="hidden" id="photo_base64" name="photo_base64">
+
+        <label>Name: <input type="text" id="borrower_name" name="borrower_name" required></label>
+        <label>ID Number: <input type="text" id="id_number" name="id_number" required></label>
+        <label>Department: <input type="text" id="department" name="department" required></label>
+        <label>Duration (days): <input type="number" id="duration_days" name="duration_days" value="7" min="1" required></label>
+
+        <button type="submit">Borrow Book</button>
+      </form>
+
+      <!-- OTP Return Section -->
+      <div id="otp-section">
+        <input type="text" id="otp-input" placeholder="Enter OTP">
+        <input type="text" id="otp-book-title" placeholder="Enter Book Title">
+        <button id="otp-btn">OTP RETURN</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const gallery = document.getElementById('bookGallery');
+let selectedBook = null;
+let capturedPhotoBase64 = null;
+
+const books = {{ books_data|safe }};
+window.updateDashboard = window.fetchDashboardStats || (()=>{});
+
+// ===== Render Books =====
+function renderBooks(filter='all'){
+  gallery.innerHTML = '';
+  for(let book of books){
+    if(filter!=='all' && book.category!==filter) continue;
+    const div = document.createElement('div');
+    div.className = 'book-card' + (book.borrowed?' borrowed':'');
+    div.dataset.id = book.id;
+    div.innerHTML = `<img src="${book.img}" alt="${book.title}"><div class="book-title">${book.title}</div><small>${book.category}</small>`;
+    if(!book.borrowed){
+      div.addEventListener('click', ()=>{
+        document.querySelectorAll('.book-card').forEach(c=>c.classList.remove('selected'));
+        div.classList.add('selected');
+        selectedBook = book;
+        document.getElementById('book_id').value = book.id;
+      });
+    }
+    gallery.appendChild(div);
+  }
+}
+renderBooks();
+
+// ===== Category Buttons =====
+document.querySelectorAll('.category-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.category-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderBooks(btn.dataset.cat);
+  });
+});
+
+// ===== Webcam Capture =====
+const video = document.getElementById('video');
+const captureBtn = document.getElementById('captureBtn');
+const result = document.getElementById('result');
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then(stream => video.srcObject = stream)
+  .catch(err => alert("Camera error: " + err));
+
+captureBtn.addEventListener('click', ()=>{
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+  capturedPhotoBase64 = canvas.toDataURL('image/png');
+  document.getElementById('photo_base64').value = capturedPhotoBase64;
+  result.textContent = "Photo captured!";
+});
+
+// ===== Borrow Book AJAX =====
+document.getElementById('borrowForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  if(!selectedBook){ alert("Please select a book first!"); return; }
+  if(!capturedPhotoBase64){ alert("Please capture your photo first!"); return; }
+
+  const payload = {
+    book_id: selectedBook.id,
+    borrower_name: document.getElementById('borrower_name').value,
+    id_number: document.getElementById('id_number').value,
+    department: document.getElementById('department').value,
+    duration_days: document.getElementById('duration_days').value,
+    photo: capturedPhotoBase64
+  };
+
+  fetch("{% url 'borrow_book_json' %}", {
+    method: "POST",
+    headers: {'Content-Type':'application/json', 'X-CSRFToken':'{{ csrf_token }}'},
+    body: JSON.stringify(payload)
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    if(data.success){
+      alert(data.message);
+      selectedBook.borrowed = true;
+      selectedBook.otp_code = data.otp;
+      renderBooks();
+      selectedBook = null;
+      if(window.updateDashboard) window.updateDashboard();
+    } else { alert(data.message); }
+  })
+  .catch(err => console.error(err));
+});
+
+// ===== OTP Return AJAX =====
+document.getElementById('otp-btn').addEventListener('click', ()=>{
+  const otp = document.getElementById('otp-input').value.trim();
+  const title = document.getElementById('otp-book-title').value.trim();
+  if(!otp || !title){ alert("Please enter both OTP and Book Title!"); return; }
+
+  const payload = { otp: otp, title: title };
+
+  fetch("{% url 'return_book_json' %}", {
+    method:"POST",
+    headers:{'Content-Type':'application/json', 'X-CSRFToken':'{{ csrf_token }}'},
+    body:JSON.stringify(payload)
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    if(data.success){
+      alert(data.message);
+      const bookToReturn = books.find(b=>b.borrowed && b.title.toLowerCase()===title.toLowerCase());
+      if(bookToReturn) bookToReturn.borrowed = false;
+      renderBooks();
+      document.getElementById('otp-input').value='';
+      document.getElementById('otp-book-title').value='';
+      if(window.updateDashboard) window.updateDashboard();
+    } else { alert(data.message); }
+  })
+  .catch(err => console.error(err));
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Listing | Smart Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Poppins', sans-serif; margin:0; background-color: #0a1f44; color: #fff; }
+  .navbar { display:flex; justify-content:space-between; align-items:center; padding:18px 50px; background-color:#0d2b66; box-shadow:0 2px 8px rgba(0,0,0,0.3); }
+  .nav-title { font-size:24px; font-weight:600; color:#fff; }
+  .nav-menu { display:flex; justify-content:center; gap:30px; background-color:#102a54; padding:12px 0; font-weight:500; }
+  .nav-menu a { color:#fff; text-decoration:none; padding:8px 12px; border-radius:5px; transition:0.3s; }
+  .nav-menu a.active, .nav-menu a:hover { background-color:#1c3b7a; color:#ffd700; }
+
+  .container { display:flex; flex-direction:column; padding:30px 50px; gap:20px; min-height:calc(100vh - 120px); }
+  h1 { margin:0; text-align:center; color:#ffd700; }
+
+  .book-gallery { display:flex; flex-wrap:wrap; gap:15px; justify-content:center; }
+  .book-card { background:#102a54; border-radius:12px; width:180px; padding:10px; text-align:center; box-shadow:0 6px 12px rgba(0,0,0,0.4); transition:0.3s; }
+  .book-card:hover { transform:translateY(-5px); box-shadow:0 10px 20px rgba(0,0,0,0.5); }
+  .book-card img { width:100%; height:220px; object-fit:cover; border-radius:8px; margin-bottom:10px; }
+  .book-title { font-weight:600; font-size:16px; color:#ffd700; }
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <h1 class="nav-title">SMART LIBRARY</h1>
+</header>
+
+<nav class="nav-menu">
+  <a href="{% url 'dashboard' %}">Dashboard</a>
+  <a href="{% url 'books' %}">Borrow Books</a>
+  <a href="{% url 'book_listing' %}" class="active">Book Listing</a>
+  <a href="#">Account</a>
+</nav>
+
+<div class="container">
+  <h1>All Books</h1>
+  <div class="book-gallery" id="bookGallery"></div>
+</div>
+
+<script>
+const gallery = document.getElementById('bookGallery');
+const books = {{ books_data|safe }};  // Passed from Django view
+
+function renderBooks() {
+  gallery.innerHTML = '';
+  books.forEach(book => {
+    const div = document.createElement('div');
+    div.className = 'book-card';
+    div.innerHTML = `
+      <img src="${book.img}" alt="${book.title}">
+      <div class="book-title">${book.title}</div>
+      <small>${book.category}</small>
+    `;
+    gallery.appendChild(div);
+  });
+}
+
+// Render on page load
+renderBooks();
+</script>
+
+</body>
+</html>

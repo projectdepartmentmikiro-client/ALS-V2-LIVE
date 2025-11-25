@@ -1,0 +1,135 @@
+/* ====== Dashboard Styles ====== */
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #201095;
+  color: #fff;
+}
+
+/* ====== Header ====== */
+.navbar {
+  background-color: #1C4AE5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 25px;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+.nav-logo {
+  width: 40px;
+  height: 40px;
+  background-color: lightgray;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.nav-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #000;
+}
+
+.logout-btn {
+  background-color: #D91E18;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 22px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #b71813;
+}
+
+/* ====== Navigation Menu ====== */
+.nav-menu {
+  background-color: #345DF5;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 12px 0;
+}
+
+.nav-menu a {
+  color: #000;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav-menu a.active {
+  border-bottom: 2px solid #fff;
+}
+
+/* ====== Dashboard Stats ====== */
+.dashboard {
+  padding: 40px;
+  text-align: center;
+}
+
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.card {
+  width: 180px;
+  height: 120px;
+  border-radius: 4px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.card p {
+  margin: 5px 0 0;
+  font-size: 14px;
+}
+
+.blue { background-color: #004CFF; }
+.green { background-color: #009944; }
+.yellow { background-color: #C7C91B; }
+.orange { background-color: #B77400; }
+
+/* ====== Table ====== */
+.table-container {
+  display: flex;
+  justify-content: center;
+}
+
+table {
+  border-collapse: collapse;
+  width: 80%;
+  background-color: #25A144;
+  color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+
+th {
+  background-color: #218838;
+  font-weight: 600;
+}

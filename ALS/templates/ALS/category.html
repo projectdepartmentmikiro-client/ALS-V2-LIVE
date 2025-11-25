@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Books | Smart Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Poppins', sans-serif; margin:0; background:#f5f7fa; color:#0a1f44; }
+
+  /* ===== NAVBAR ===== */
+  .navbar { background-color: #0d2b66; color: white; display: flex; justify-content: space-between; align-items: center; padding: 18px 50px; }
+  .nav-title { font-size: 24px; font-weight: 600; color: #fff; }
+  .logout-btn { background-color: #e63946; border: none; padding: 8px 18px; color: white; font-weight: 600; border-radius: 6px; cursor: pointer; transition: 0.3s; }
+  .logout-btn:hover { background-color: #cc2e3b; }
+
+  .nav-menu { display: flex; justify-content: center; gap: 30px; background-color: #102a54; padding: 12px 0; font-weight: 500; }
+  .nav-menu a { color: #ffffff; text-decoration: none; padding: 8px 12px; border-radius: 5px; transition: 0.3s; }
+  .nav-menu a.active, .nav-menu a:hover { background-color: #1c3b7a; color: #ffd700; }
+
+  /* ===== Books Grid ===== */
+  .books-section { padding: 40px 50px; }
+  .books-header { text-align: center; margin-bottom: 30px; }
+  .books-header h2 { font-size: 28px; color: #0d2b66; font-weight: 700; }
+  .books-header p { color: #555; font-size: 16px; }
+
+  .books-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+  .book-card { background:#102a54; border-radius:12px; width:180px; padding:10px; text-align:center; box-shadow:0 6px 12px rgba(0,0,0,0.4); transition:0.3s; color: #fff; cursor:pointer; }
+  .book-card img { width:100%; height:220px; object-fit:cover; border-radius:8px; margin-bottom:10px; }
+  .book-card:hover { transform: translateY(-5px); box-shadow:0 10px 20px rgba(0,0,0,0.5); }
+  .book-card small { color: #ffd700; }
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <h1 class="nav-title">SMART LIBRARY</h1>
+</header>
+
+<nav class="nav-menu">
+  <a href="{% url 'dashboard' %}">Dashboard</a>
+  <a href="{% url 'books' %}" class="active">Books</a>
+  <a href="{% url 'category' %}">Category</a>
+  <a href="#">Authors</a>
+  <a href="#">Borrow Books</a>
+  <a href="#">Account</a>
+</nav>
+
+<section class="books-section">
+  <div class="books-header">
+    <h2>All Books</h2>
+    <p>Click a book to see details or borrow it</p>
+  </div>
+
+  <div class="books-grid" id="booksGrid">
+    <!-- Books loaded dynamically -->
+  </div>
+</section>
+
+<script>
+const books = {{ books_data|safe }};
+const booksGrid = document.getElementById("booksGrid");
+
+// Render all books
+function renderBooks(){
+  booksGrid.innerHTML = '';
+  books.forEach(b => {
+    const div = document.createElement('div');
+    div.className = 'book-card';
+    div.innerHTML = `
+      <img src="${b.img}" alt="${b.title}">
+      <div>${b.title}</div>
+      <small>${b.category}</small>
+    `;
+
+    div.addEventListener('click', ()=>{
+      // Redirect to Borrow page for this book
+      window.location.href = "/borrow/" + b.id + "/";
+    });
+
+    booksGrid.appendChild(div);
+  });
+}
+
+renderBooks();
+</script>
+
+
+</body>
+</html>

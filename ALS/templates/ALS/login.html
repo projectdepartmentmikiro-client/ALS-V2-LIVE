@@ -1,0 +1,188 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Library Login - Admin & Student</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            width: 120px;
+            margin: 0 auto 20px auto;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        h2 {
+            font-size: 1em;
+            margin-top: 0;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .role-btn {
+            display: block;
+            width: 100%;
+            padding: 15px 0;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            background-color: #2e7d32;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+
+        .role-btn:hover {
+            background-color: #1b5e20;
+        }
+
+        form {
+            text-align: left;
+            display: none; /* hidden initially */
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+        }
+
+        .login-btn {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 15px 0;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            background-color: #1b5e20;
+        }
+
+        .messages {
+            margin-bottom: 15px;
+        }
+
+        .messages .alert {
+            color: red;
+            font-size: 0.9em;
+        }
+
+        .register-text {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .register-link {
+            color: #2e7d32;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .register-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Logo -->
+        <img src="https://i.postimg.cc/rmCBGf4F/logo.png" alt="Smart Library Logo" class="logo">
+
+        <h1>Smart Library</h1>
+        <h2>ISU - Cauayan City, Isabela</h2>
+
+        <!-- Role selection buttons -->
+        <button class="role-btn" onclick="showLogin('admin')">ADMIN</button>
+        <button class="role-btn" onclick="showLogin('student')">STUDENT</button>
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- FIXED LOGIN FORM -->
+        <form id="loginForm" method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            <!-- ADD HIDDEN ROLE INPUT -->
+            <input type="hidden" id="roleInput" name="role">
+
+            <label>ID Number</label>
+            <input type="text" name="id_number" required>
+
+            <label>Password</label>
+            <input type="password" name="password" required>
+
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+
+        <!-- Register link -->
+        <p class="register-text">
+            Don’t have an account? 
+            <a href="{% url 'signup' %}" class="register-link">Register</a>
+        </p>
+
+    </div>
+
+    <!-- FIXED JS -->
+    <script>
+        function showLogin(role) {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('roleInput').value = role;
+            window.scrollTo({
+                top: document.getElementById('loginForm').offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

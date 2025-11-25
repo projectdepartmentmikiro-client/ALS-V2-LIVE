@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Returned Books</title>
+</head>
+<body>
+    <h2>Returned Books</h2>
+
+    {% if returned_books %}
+    <table border="1" cellpadding="8" cellspacing="0">
+        <tr>
+            <th>Book Title</th>
+            <th>Returned At</th>
+        </tr>
+        {% for record in returned_books %}
+        <tr>
+            <td>{{ record.book.title }}</td>
+            <td>{{ record.returned_at|date:"Y-m-d H:i:s" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No returned books yet.</p>
+    {% endif %}
+
+    <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+
+    <script>
+        // Poll server every 5 seconds to check new returned books
+        function checkReturnedUpdates() {
+            fetch("{% url 'check_return_status' %}")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.returned_books && data.returned_books.length > 0) {
+                        // Reload page to show new returned books
+                        location.reload();
+                    }
+                })
+                .catch(err => console.log(err));
+        }
+
+        setInterval(checkReturnedUpdates, 5000);
+    </script>
+</body>
+</html>

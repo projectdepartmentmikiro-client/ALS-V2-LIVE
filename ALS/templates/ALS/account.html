@@ -1,0 +1,236 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account Settings | Smart Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+ body { 
+    font-family: 'Poppins', sans-serif; 
+    margin: 0; 
+    background-color: #f4f4f4; /* light gray */ 
+    color: #333; 
+}
+
+/* ===== NAVBAR ===== */
+.navbar { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 18px 50px; 
+    background-color: #2e7d32; /* green */ 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3); 
+}
+.nav-title { font-size: 24px; font-weight: 600; color: #fff; }
+.logout-btn { 
+    background-color: #2e7d32; 
+    border: none; 
+    padding: 8px 18px; 
+    color: #fff; 
+    font-weight: 600; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    transition: 0.3s; 
+}
+.logout-btn:hover { background-color: #1b5e20; }
+
+.nav-menu { 
+    display: flex; 
+    justify-content: center; 
+    gap: 30px; 
+    background-color: #fff; 
+    padding: 12px 0; 
+    font-weight: 500; 
+}
+.nav-menu a { 
+    color: #2e7d32; 
+    text-decoration: none; 
+    padding: 8px 12px; 
+    border-radius: 5px; 
+    transition: 0.3s; 
+}
+.nav-menu a.active, .nav-menu a:hover { 
+    background-color: #1b5e20; 
+    color: #ffd700; 
+}
+
+/* ===== Account Card ===== */
+.dashboard { 
+    padding: 30px 60px; 
+    display: flex; 
+    justify-content: center; 
+}
+.account-card { 
+    background-color: #2e7d32; 
+    padding: 30px; 
+    border-radius: 15px; 
+    box-shadow: 0 6px 15px rgba(0,0,0,0.4); 
+    width: 400px; 
+    text-align: center; 
+    color: #fff; 
+}
+.account-card h2 { 
+    text-align: center; 
+    margin-bottom: 25px; 
+    color: #ffd700; 
+}
+
+/* ===== Profile Image ===== */
+.profile-img-container { margin-bottom: 20px; }
+.profile-img-preview { 
+    display: block; 
+    margin: 0 auto 20px; 
+    width: 120px; 
+    height: 120px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    border: 3px solid #ffd700; 
+    cursor: pointer; 
+}
+
+/* ===== Input Groups ===== */
+.input-group { margin-bottom: 15px; text-align: left; }
+.input-group label { display: block; margin-bottom: 5px; font-weight: 500; color: #fff; }
+.input-group input[type="text"], 
+.input-group input[type="email"], 
+.input-group input[type="file"] { 
+    width: 100%; 
+    padding: 10px; 
+    border-radius: 6px; 
+    border: none; 
+    background-color: #fff; 
+    color: #333; 
+}
+
+/* ===== Buttons ===== */
+button { 
+    padding: 12px; 
+    border: none; 
+    border-radius: 6px; 
+    font-weight: 600; 
+    width: 100%; 
+    margin-top: 10px; 
+    cursor: pointer; 
+    transition: 0.3s; 
+}
+
+#saveBtn { 
+    background-color: #2e7d32; 
+    color: #fff; 
+}
+#saveBtn:hover { 
+    background-color: #1b5e20; 
+}
+
+#editBtn { 
+    background-color: #ffd700; 
+    color: #2e7d32; 
+}
+#editBtn:hover { 
+    background-color: #e6c200; 
+}
+
+.hidden { display: none; }
+
+</style>
+</head>
+<body>
+
+<header class="navbar">
+  <h1 class="nav-title">SMART LIBRARY</h1>
+  <button class="logout-btn" onclick="window.location.href='{% url 'logout' %}'">Logout</button>
+</header>
+
+<nav class="nav-menu">
+  <a href="{% url 'dashboard' %}">Dashboard</a>
+  <a href="{% url 'books' %}">Borrow Books</a>
+  <a href="{% url 'account_settings' %}" class="active">Account</a>
+</nav>
+
+<main class="dashboard">
+  <div class="account-card">
+    <h2>Account Settings</h2>
+
+    <div class="profile-img-container">
+        <img src="{% static 'default-profile.png' %}" alt="Profile Image" class="profile-img-preview" id="profilePreview">
+        <input type="file" id="id_profile_image" accept="image/*">
+    </div>
+
+    <div class="input-group">
+        <label for="id_email">Email</label>
+        <input type="email" id="id_email" placeholder="Enter email">
+    </div>
+    <div class="input-group">
+        <label for="id_address">Address</label>
+        <input type="text" id="id_address" placeholder="Enter address">
+    </div>
+    <button id="saveBtn">Save Changes</button>
+    <button id="editBtn" class="hidden">Edit</button>
+  </div>
+</main>
+
+<script>
+// Elements
+const profileInput = document.getElementById("id_profile_image");
+const profilePreview = document.getElementById("profilePreview");
+const emailInput = document.getElementById("id_email");
+const addressInput = document.getElementById("id_address");
+const saveBtn = document.getElementById("saveBtn");
+const editBtn = document.getElementById("editBtn");
+
+// Load saved data from localStorage
+window.addEventListener('load', () => {
+    const savedImage = localStorage.getItem('profileImage');
+    const savedEmail = localStorage.getItem('email');
+    const savedAddress = localStorage.getItem('address');
+
+    if(savedImage) profilePreview.src = savedImage;
+    if(savedEmail) emailInput.value = savedEmail;
+    if(savedAddress) addressInput.value = savedAddress;
+
+    emailInput.disabled = true;
+    addressInput.disabled = true;
+    profileInput.disabled = true;
+});
+
+// Live preview
+profileInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if(file){
+        const reader = new FileReader();
+        reader.onload = function(event){
+            profilePreview.src = event.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+});
+
+// Save to localStorage
+saveBtn.addEventListener('click', () => {
+    localStorage.setItem('profileImage', profilePreview.src);
+    localStorage.setItem('email', emailInput.value);
+    localStorage.setItem('address', addressInput.value);
+
+    emailInput.disabled = true;
+    addressInput.disabled = true;
+    profileInput.disabled = true;
+
+    saveBtn.classList.add('hidden');
+    editBtn.classList.remove('hidden');
+});
+
+// Enable editing
+editBtn.addEventListener('click', () => {
+    emailInput.disabled = false;
+    addressInput.disabled = false;
+    profileInput.disabled = false;
+
+    saveBtn.classList.remove('hidden');
+    editBtn.classList.add('hidden');
+});
+</script>
+
+</body>
+</html>
