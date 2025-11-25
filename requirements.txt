@@ -4,5 +4,4 @@ python-dotenv==1.0.1
 qrcode==8.2
 Pillow==10.2.0
 opencv-python-headless==4.10.0.84
-firebase_admin==7.1.0
 requests==2.31.0
